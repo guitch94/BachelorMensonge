@@ -1,22 +1,22 @@
 import numpy as np
 import os
 from matplotlib import pyplot as plt, gridspec
-from Utils import ZONE_VISAGE
 from matplotlib.backends.backend_pdf import PdfPages
+from ExtractionDesDonnees.Utilitaires import ZONE_VISAGE, reductionBruit
 
-NB_MULTI_TAB = 10
-NB_FRAME = 15
+NB_MULTI_TAB = 10 # nombre de "petites videos" que l'on veut prendre en compte
+NB_IMAGES = 15 # nombre de d'images par "petites vidéos"
 NB_ZONE_VISAGE = 17
 PATH = "Resultats/"
-VIDEO_NAME = "Mensonge_normal_2_1593197813162.txt"
 
+# récupère les résultats d'un fichier texte et les renvoie sous forme d'un tableau numpy
 def recupResultats(path, videoName):
 
     fichier = open(path + videoName, "r")
     strRes = fichier.read()
     debutMultiTab = 0
 
-    resultats = np.empty([NB_MULTI_TAB, NB_ZONE_VISAGE, NB_FRAME])
+    resultats = np.empty([NB_MULTI_TAB, NB_ZONE_VISAGE, NB_IMAGES])
 
     for i in range(NB_MULTI_TAB):
         debutMultiTab = strRes.find("[[", debutMultiTab + 1)
@@ -35,6 +35,7 @@ def recupResultats(path, videoName):
     fichier.close()
     return resultats
 
+# renvoie un numpy array contenant le maximum de chaque petites vidéos pour chaque zone
 def recupMaxParZone(resultats):
 
     maxParZone = np.empty([NB_ZONE_VISAGE, NB_MULTI_TAB])
@@ -43,8 +44,8 @@ def recupMaxParZone(resultats):
             maxParZone[j][i] = np.max(resultats[i][j])
     return maxParZone
 
-
-def creerGraph(maxParZone, videoName):
+# créer un graphique "bar chart"
+def creerBarGraph(donnee, videoName):
 
     fig = plt.figure(figsize=(5, 20))
     grid = gridspec.GridSpec(ncols=1, nrows=NB_ZONE_VISAGE, hspace=0, figure=fig)
@@ -53,7 +54,7 @@ def creerGraph(maxParZone, videoName):
             fig.add_subplot(grid[i, 0]).set_title(videoName)
         else:
             fig.add_subplot(grid[i, 0])
-        plt.bar(range(1, NB_MULTI_TAB + 1), maxParZone[i], width=0.3)
+        plt.bar(range(1, NB_MULTI_TAB + 1), donnee[i], width=0.3)
         plt.ylabel(ZONE_VISAGE.get(i + 1), fontsize=5.5)
         plt.ylim(0, 15)
 
@@ -63,15 +64,36 @@ def creerGraph(maxParZone, videoName):
 
     return fig
 
-lstVideo = os.listdir(PATH)
+# créer un graphique de "boîte à moustache" pour la moyenne de déplacement de chacunes des zones
+def Boxplots(tabMoyenne):
+	tabMoyenne = reductionBruit(tabMoyenne)
+	for i in range(len(tabMoyenne) - 1):
+		creerBoxplot(tabMoyenne[i],(6,3,i+1), ZONE_VISAGE.get(i + 1))
+	plt.show()
+
+# créer un graphique de "boîte à moustache" pour une zone en particulier
+def Boxplot(tabMoyenne, zone):
+	tabMoyenne = reductionBruit(tabMoyenne)
+	creerBoxplot(tabMoyenne[zone - 1], (1, 1, 1), ZONE_VISAGE.get(zone))
+	plt.show()
+
+# crée un graphique de "boîte à moustache"
+def creerBoxplot(points, numPlot, nomZone):
+	plt.subplot(numPlot[0],numPlot[1],numPlot[2])
+	plt.boxplot(points)
+	plt.ylim(0, 5)
+	plt.title(nomZone)
+
+lstResultats = os.listdir(PATH)
+
 if os.path.exists('resultats.pdf'):
     os.remove("resultats.pdf")
-lstVideo.sort()
+lstResultats.sort()
 pp = PdfPages('resultats.pdf')
 
-for name in lstVideo:
+for name in lstResultats:
     resultats = recupResultats(PATH, name)
     maxParZone = recupMaxParZone(resultats)
-    pp.savefig(creerGraph(maxParZone, name))
+    pp.savefig(creerBarGraph(maxParZone, name))
 
 pp.close()

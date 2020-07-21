@@ -18,7 +18,7 @@ import logging
 import numpy as np
 
 
-from ExtractionDesDonnees.Utilitaires import shape_to_np, creerTabPoint, filtre, direction, moyenne, reductionBruit, traitementImage
+from ExtractionDesDonnees.UtilExtract import shape_to_np, creerTabPoint, filtre, direction, moyenne, reductionBruit, traitementImage
 from scipy.spatial import distance
 
 import os
