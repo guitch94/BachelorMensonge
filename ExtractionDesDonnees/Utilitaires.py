@@ -4,7 +4,7 @@
 # Date de dernière modification : 23.07.2020
 #
 # Description : Ce script contient différentes fonctions utile au script d'extraction
-#				de caractéristique.
+#				de caractéristique ainsi qu'au script d'analyse de données.
 #
 #
 #################################################################################################
@@ -16,9 +16,10 @@ import imutils
 import itertools
 import numpy as np
 
-from matplotlib import pyplot
+
 from scipy.spatial import distance
 from _collections import OrderedDict
+
 
 # adapte les points proposé par le prédicteur à un numpy array
 def shape_to_np(shape, dtype="int"):
@@ -39,7 +40,7 @@ INDEX_REPERE_FACIAUX = OrderedDict([
 	("machoire", (0, 17))
 ])
 
-# dictionnaire contenant les zones créé par nos soins
+# dictionnaire contenant les zones du visage créé par nos soins
 ZONE_VISAGE = {
 	1 : "front_droit",
 	2 : "front_milieu",
@@ -110,7 +111,7 @@ def creerTabPoint(shape):
 	l17 = getBoucheDroite(shape[INDEX_REPERE_FACIAUX['oeil_droit'][0]:INDEX_REPERE_FACIAUX['oeil_droit'][1]],
 						shape[INDEX_REPERE_FACIAUX['bouche'][0]:INDEX_REPERE_FACIAUX['bouche'][1]])
 
-	l18 = getnez(shape[INDEX_REPERE_FACIAUX['nez'][0]:INDEX_REPERE_FACIAUX['nez'][1]])
+	l18 = getNez(shape[INDEX_REPERE_FACIAUX['nez'][0]:INDEX_REPERE_FACIAUX['nez'][1]])
 
 	return list(itertools.chain(l1,l2,l3,l4,l5,l6,l7,l8,l9,l10,l11,l12,l13,l14,l15,l16,l17,l18))
 
@@ -220,7 +221,7 @@ def getBoucheDroite(oeil_droits, bouche):
 	startingPoint = (oeil_droits[1][0], bouche[3][1])
 	return getZone(sizeX, sizeY, startingPoint)
 
-def getnez(nez):
+def getNez(nez):
 	sizeX = nez[7][0] - nez[5][0]
 	sizeY = nez[6][1] - nez[3][1]
 	startingPoint = (nez[5][0], nez[2][1])
@@ -233,7 +234,7 @@ def getZone(sizeX, sizeY, startingPoint):
 def matricePoints(startingPoint, nbPoints, sizeX, sizeY):
 	sizeBetweenPointsX =  int(sizeX/(nbPoints - 1))
 	sizeBetweenPointsY =  int(sizeY/(nbPoints - 1))
-	newPoints = [None] * nbPoints * nbPoints
+	newPoints = [None] * nbPoints ** 2
 	for i in range(nbPoints):
 		for j in range(nbPoints):
 			newPoints[i * nbPoints + j] =  [startingPoint[0] + sizeBetweenPointsX * j, startingPoint[1] + sizeBetweenPointsY * i]
@@ -271,7 +272,7 @@ def direction(tabPointDebut, tabPointFin, tabDist):
 
 
 # Calcul la moyenne de déplacement des points par zones
-def moyenne(points, st):
+def moyenne(points, st ):
 
 	nbFrame = int(len(points))
 	nbPointsParZone = NB_POINT**2
@@ -303,24 +304,6 @@ def reductionBruit(tabMoyenne):
 				tabMoyenne[i][j] = 0
 	return tabMoyenne
 
-# créer un graphique de "boîte à moustache" pour chacunes des zones
-def Boxplots(tabMoyenne):
-	tabMoyenne = reductionBruit(tabMoyenne)
-	for i in range(len(tabMoyenne) - 1):
-		creerBoxplot(tabMoyenne[i],(6,3,i+1), ZONE_VISAGE.get(i + 1))
-	pyplot.show()
-# créer un graphique de "boîte à moustache" pour une zone en particulier
-def Boxplot(tabMoyenne, zone):
-	tabMoyenne = reductionBruit(tabMoyenne)
-	creerBoxplot(tabMoyenne[zone - 1], (1, 1, 1), ZONE_VISAGE.get(zone))
-	pyplot.show()
-
-# crée un graphique de "boîte à moustache"
-def creerBoxplot(points, numPlot, nomZone):
-	pyplot.subplot(numPlot[0],numPlot[1],numPlot[2])
-	pyplot.boxplot(points)
-	pyplot.ylim(0, 5)
-	pyplot.title(nomZone)
 
 # traite l'image pour qu'elle soit exploitable par le script
 def traitementImage(image):

@@ -11,16 +11,17 @@
 #
 # Remarque : Une vidéo est un ensemble d'images mise bout à bout
 #################################################################################################
-import os
 import cv2
 import dlib
-import Utils
 import shutil
 import logging
 import numpy as np
 
-from Utils import creerTabPoint, filtre, direction, moyenne, reductionBruit, traitementImage
+
+from ExtractionDesDonnees.Utilitaires import shape_to_np, creerTabPoint, filtre, direction, moyenne, reductionBruit, traitementImage
 from scipy.spatial import distance
+
+import os
 
 PATH_VIDEOS = 'Videos/'
 
@@ -93,7 +94,7 @@ for video in lstVideos:
             break
 
         # définit les différents points que nous allons analysé
-        points = creerTabPoint(Utils.shape_to_np(shape))
+        points = creerTabPoint(shape_to_np(shape))
     
         #initialise un numpy array contenant les points à analyser
         p0 = np.array([[[0.,0.]]] * len(points), dtype='f')
@@ -136,7 +137,8 @@ for video in lstVideos:
     
 
             evolPoints = np.append(evolPoints,p1).reshape(nbImage + 1,len(p0),2)
-    
+
+            # Calcul l'évolution de la distance des points
             for i in range(len(evolPoints[0])):
                 if(nbImage == 1):
                     evolDist[nbImage - 1][i] = distance.euclidean([evolPoints[nbImage - 1][i][0], evolPoints[nbImage - 1][i][1]], [evolPoints[nbImage][i][0], evolPoints[nbImage][i][1]])
@@ -148,7 +150,8 @@ for video in lstVideos:
 
             # applique un filtre qui va indiquer si un points et exploitable ou non en fonction de la distance qu'il a parcouru d'une image à la suivante
             st = filtre(evolSt, evolDist[nbImage - 1],20)
-    
+
+            # Calcul l'évolution de la direction des points
             if (nbImage == 1):
                 evolDirection = np.array(direction(evolPoints[nbImage - 1], evolPoints[nbImage], evolDist[nbImage - 1]))
             else:
