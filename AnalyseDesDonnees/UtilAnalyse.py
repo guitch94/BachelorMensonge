@@ -2,7 +2,7 @@ import numpy as np
 import os
 from matplotlib import pyplot as plt, gridspec
 from matplotlib.backends.backend_pdf import PdfPages
-from ExtractionDesDonnees.Utilitaires import ZONE_VISAGE, reductionBruit
+from ExtractionDesDonnees.UtilExtract import ZONE_VISAGE, reductionBruit
 
 NB_MULTI_TAB = 10 # nombre de "petites videos" que l'on veut prendre en compte
 NB_IMAGES = 15 # nombre de d'images par "petites vidéos"
