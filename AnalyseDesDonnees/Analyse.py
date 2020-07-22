@@ -7,7 +7,7 @@
 #               données. Le premier pdf (resultat_bar) montre le déplacement maximum des points
 #               pour chaque zones et pour chaque fichier résultats proposés, sous forme
 #               de bar chart. Le second, montre la moyenne des déplacements, pour chaque petites
-#               vidéos et pour chaque zones du visage
+#               vidéos et pour chaque zones du visage.
 #
 #
 #################################################################################################
