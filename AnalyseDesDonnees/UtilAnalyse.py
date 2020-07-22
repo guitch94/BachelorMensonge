@@ -7,7 +7,7 @@ from ExtractionDesDonnees.UtilExtract import ZONE_VISAGE, reductionBruit
 NB_MULTI_TAB = 10 # nombre de "petites videos" que l'on veut prendre en compte
 NB_IMAGES = 15 # nombre de d'images par "petites vidéos"
 NB_ZONE_VISAGE = 17
-PATH = "Resultats/"
+
 
 # récupère les résultats d'un fichier texte et les renvoie sous forme d'un tableau numpy
 def recupResultats(path, videoName):
@@ -65,25 +65,21 @@ def creerBarGraph(donnee, videoName):
     return fig
 
 # créer un graphique de "boîte à moustache" pour la moyenne de déplacement de chacunes des zones
-def Boxplots(tabMoyenne):
-	tabMoyenne = reductionBruit(tabMoyenne)
-	for i in range(len(tabMoyenne) - 1):
-		creerBoxplot(tabMoyenne[i],(6,3,i+1), ZONE_VISAGE.get(i + 1))
-	plt.show()
+def boxplots(donnee):
+    fig = plt.figure(figsize=(10, 10))
+    grid = gridspec.GridSpec(ncols=4, nrows=5, hspace=0, figure=fig)
+	for i in range(NB_ZONE_VISAGE):
+		creerBoxplot(donnee[i],(6,3,i+1), ZONE_VISAGE.get(i + 1))
 
-# créer un graphique de "boîte à moustache" pour une zone en particulier
-def Boxplot(tabMoyenne, zone):
-	tabMoyenne = reductionBruit(tabMoyenne)
-	creerBoxplot(tabMoyenne[zone - 1], (1, 1, 1), ZONE_VISAGE.get(zone))
-	plt.show()
 
 # crée un graphique de "boîte à moustache"
 def creerBoxplot(points, numPlot, nomZone):
-	plt.subplot(numPlot[0],numPlot[1],numPlot[2])
-	plt.boxplot(points)
-	plt.ylim(0, 5)
-	plt.title(nomZone)
 
+    plt.subplot(numPlot[0],numPlot[1],numPlot[2])
+    plt.boxplot(points)
+    plt.ylim(0, 5)
+    plt.title(nomZone)
+'''
 lstResultats = os.listdir(PATH)
 
 if os.path.exists('resultats.pdf'):
@@ -96,4 +92,4 @@ for name in lstResultats:
     maxParZone = recupMaxParZone(resultats)
     pp.savefig(creerBarGraph(maxParZone, name))
 
-pp.close()
+pp.close()'''
