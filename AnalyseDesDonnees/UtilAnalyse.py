@@ -1,3 +1,13 @@
+#################################################################################################
+# Auteur : Guillaume Blanco
+#
+# Date de dernière modification : 23.07.2020
+#
+# Description : Ce script contient différentes fonctions utile au script d'analyse
+#				des données.
+#
+#
+#################################################################################################
 import numpy as np
 
 from matplotlib import pyplot as plt, gridspec
@@ -63,7 +73,7 @@ def creerBarGraph(donnee, videoName):
 
     return fig
 
-# créer un graphique de "boîte à moustache"
+# créer un graphique de "boîte à moustache"  avec comme titre le nom de la vidéo
 def boxplots(donnee, videoName, videoNum):
     NCOLS = 4
     NROWS = 5
