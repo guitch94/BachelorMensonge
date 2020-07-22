@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="270dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:gravity="left"
+        android:text="Règles:\n\n1) Choississez une catégorie\n2) Ajustez votre tête dans le rectangle rouge\n3) Cliquez sur start, s'il est écrit 'vérité' décrivez ce que vous voyez, sinon mentez sur ce que vous voyez\n4) Essayez de bouger le moins possible (sinon la vidéo sera inexploitable)"
+        android:textSize="18dp" />
+        />
+
+    <Button
+        android:id="@+id/normal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_above="@id/emotion"
+        android:text="Normal" />
+
+    <Button
+        android:id="@+id/emotion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+
+        android:text="Emotion" />
+
+    <Button
+        android:id="@+id/choquant"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_below="@id/emotion"
+        android:text="Choquant" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textSize="18dp"
+        android:text="Les vidéos que vous enregistrez sur ce téléphone ne seront utilisées qu'à des fins d'études"
+        android:gravity="center"
+        android:layout_below="@id/choquant"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"/>
+
+
+
+</RelativeLayout>
