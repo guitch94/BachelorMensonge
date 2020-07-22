@@ -11,17 +11,16 @@
 #
 # Remarque : Une vidéo est un ensemble d'images mise bout à bout
 #################################################################################################
+import os
 import cv2
 import dlib
 import shutil
 import logging
 import numpy as np
 
-
 from ExtractionDesDonnees.UtilExtract import shape_to_np, creerTabPoint, filtre, direction, moyenne, reductionBruit, traitementImage
 from scipy.spatial import distance
 
-import os
 
 PATH_VIDEOS = 'Videos/'
 
@@ -188,7 +187,7 @@ for video in lstVideos:
         # supprime les fenêtres d'affichage
         cv2.destroyAllWindows()
 
-        # Stockage de l'évolution de la distance moyenne parcourue par les points par zones du visage
+        # Stockage de l'évolution de la distance moyenne parcourue par les points pour chaque zones du visage
         fichier.write("\n\n" + str(int(imageTot/NB_IMAGE_PAR_VIDEO)))
         fichier.write("\n----------------------------------------------------------------------------------\n")
         fichier.write(np.array2string(reductionBruit(moyenne(evolDist, evolSt))))

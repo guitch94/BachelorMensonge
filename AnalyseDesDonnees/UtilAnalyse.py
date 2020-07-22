@@ -1,7 +1,6 @@
 import numpy as np
-import os
+
 from matplotlib import pyplot as plt, gridspec
-from matplotlib.backends.backend_pdf import PdfPages
 from ExtractionDesDonnees.UtilExtract import ZONE_VISAGE, reductionBruit
 
 NB_MULTI_TAB = 10 # nombre de "petites videos" que l'on veut prendre en compte
@@ -44,7 +43,7 @@ def recupMaxParZone(resultats):
             maxParZone[j][i] = np.max(resultats[i][j])
     return maxParZone
 
-# créer un graphique "bar chart"
+# créer un graphique "bar chart" avec comme titre le nom de la vidéo
 def creerBarGraph(donnee, videoName):
 
     fig = plt.figure(figsize=(5, 20))
@@ -64,32 +63,21 @@ def creerBarGraph(donnee, videoName):
 
     return fig
 
-# créer un graphique de "boîte à moustache" pour la moyenne de déplacement de chacunes des zones
-def boxplots(donnee):
-    fig = plt.figure(figsize=(10, 10))
-    grid = gridspec.GridSpec(ncols=4, nrows=5, hspace=0, figure=fig)
-	for i in range(NB_ZONE_VISAGE):
-		creerBoxplot(donnee[i],(6,3,i+1), ZONE_VISAGE.get(i + 1))
+# créer un graphique de "boîte à moustache"
+def boxplots(donnee, videoName, videoNum):
+    NCOLS = 4
+    NROWS = 5
+    fig = plt.figure(figsize=(10, 15))
+    grid = gridspec.GridSpec(ncols=NCOLS, nrows=NROWS, figure=fig)
+    for i in range(NROWS):
+        for j in range(NCOLS):
+            if i * NCOLS + j == 0 :
+                fig.add_subplot(grid[i, j]).set_title(videoName + "\n" + "Mini vidéo num : " + str(videoNum) + "\n" + ZONE_VISAGE.get(i * NCOLS + j + 1))
+            else:
+                fig.add_subplot(grid[i, j]).set_title(ZONE_VISAGE.get(i * NCOLS + j + 1))
+            plt.boxplot(donnee[i * NCOLS + j])
+            plt.ylim(0, 5)
+            if i * NCOLS + j >= NB_ZONE_VISAGE - 1:
+                break
+    return fig
 
-
-# crée un graphique de "boîte à moustache"
-def creerBoxplot(points, numPlot, nomZone):
-
-    plt.subplot(numPlot[0],numPlot[1],numPlot[2])
-    plt.boxplot(points)
-    plt.ylim(0, 5)
-    plt.title(nomZone)
-'''
-lstResultats = os.listdir(PATH)
-
-if os.path.exists('resultats.pdf'):
-    os.remove("resultats.pdf")
-lstResultats.sort()
-pp = PdfPages('resultats.pdf')
-
-for name in lstResultats:
-    resultats = recupResultats(PATH, name)
-    maxParZone = recupMaxParZone(resultats)
-    pp.savefig(creerBarGraph(maxParZone, name))
-
-pp.close()'''

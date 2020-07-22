@@ -16,7 +16,6 @@ import imutils
 import itertools
 import numpy as np
 
-
 from scipy.spatial import distance
 from _collections import OrderedDict
 
