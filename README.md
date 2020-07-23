@@ -22,6 +22,8 @@ Certains résultats contiennent dans leur nom l'information "contient_des_NaN", 
 
 ### Analyse des données
 
+Concernant l'analyse des données,
+
 
 
 
