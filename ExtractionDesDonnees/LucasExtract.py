@@ -200,6 +200,7 @@ for video in lstVideos:
 
     if erreurVisage == 1:
         os.rename(PATH_RESULTATS + video + ".txt" , PATH_RESULTATS + video + "_contient_des_NaN.txt")
+        erreurVisage = 0
 
     # déplacement des vidéos traitée dans un dossier "video traitée"
     if os.path.exists(PATH_VIDEO_TRAITEE + video):

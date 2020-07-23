@@ -22,7 +22,9 @@ Certains résultats contiennent dans leur nom l'information "contient_des_NaN", 
 
 ### Analyse des données
 
-Concernant l'analyse des données,
+Concernant l'analyse des données, il vous faut créer un dossier Resultats et y placer les résultats que vous avez obtenu grâce à l'extraction des données. Le script Analyse créer deux PDF contenant des représentations graphiques de nos données. Le PDF resultats_bar est un graphique bar chart représentant le déplacement maximum de chaque zones du visage pour chaque "petite vidéo" (il est possible de choisir le nombre de petites vidéos que vous voulez traiter). Le PDF resultats_box est un graphique boxplot représentant les "boîte à moustache" pour chaque zones pour chaque "petites vidéos".
+
+Cette étape étant, elle aussi, assez longue, vous trouverez les PDFs dans le dossier AnalyseDesDonnees. Nous n'avons utilisé que 41 des 43 résultats obtenus car deux ne fournissaient pas assez de "frames" à étudier (nous avions mis une limite à 10 petites vidéos de 15 "frames").
 
 
 
