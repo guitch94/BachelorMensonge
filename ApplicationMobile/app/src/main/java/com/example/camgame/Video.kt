@@ -88,7 +88,7 @@ class Video : AppCompatActivity() {
         // Configuration de la prévisualisation
         val previewConfig = PreviewConfig.Builder().apply {
             setLensFacing(lensFacing)
-            setTargetResolution(Size(640, 300))
+            setTargetResolution(Size(640, 500))
         }.build()
 
 
