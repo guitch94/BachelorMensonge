@@ -22,11 +22,17 @@ Certains résultats contiennent dans leur nom l'information "contient_des_NaN", 
 
 ### Analyse des données
 
+#### Scripts & graphique
+
 Concernant l'analyse des données, il vous faut créer un dossier Resultats et y placer les résultats que vous avez obtenu grâce à l'extraction des données. Le script Analyse créer deux PDF contenant des représentations graphiques de nos données. Le PDF resultats_bar est un graphique bar chart représentant le déplacement maximum de chaque zones du visage pour chaque "petite vidéo" (il est possible de choisir le nombre de petites vidéos que vous voulez traiter). Le PDF resultats_box est un graphique boxplot représentant les "boîte à moustache" pour chaque zones pour chaque "petites vidéos".
 
-Cette étape étant, elle aussi, assez longue, vous trouverez les PDFs dans le dossier AnalyseDesDonnees. Nous n'avons utilisé que 41 des 43 résultats obtenus car deux ne fournissaient pas assez de "frames" à étudier (nous avions mis une limite à 10 petites vidéos de 15 "frames").
+Cette étape étant, elle aussi, assez longue, vous trouverez les PDFs dans le dossier AnalyseDesDonnees. Nous n'avons utilisé que 41 des 43 résultats obtenus car deux ne fournissaient pas assez de "frames" à étudier (nous avions mis une limite à 10 petites vidéos de 15 "frames"). Les résultats suivants ont été retirés : "Vérité_normal_4_1593005176949.mp4.txt" et "Mensonge_normal_1_1593027647192.mp4.txt".
 
+#### Notebook & T-SNE
 
+Pour utiliser le notebook, il vous faut aussi créer un fichier "Resultats" contenant les résultats obtenus à l'aide du script d'extraction de données. Il faut cependant être vigilant au fichier contenant des NaN. Si ceux-ci apparaissent dans les données que vous aller exploiter, il vous faut les supprimer, sinon le notebook ne fonctionnera pas.
 
+C'est pourquoi si vous voulez utiliser nos données pour reproduire expérience et que vous aussi souhaitez ne traiter que les 10 premières "petites vidéos", il vous faut supprimer les fichiers suivants du dossier "Resultats" :  "Vérité_choquant_1_1593621468067.mp4_contient_des_NaN.txt" et "Vérité_choquant_2_1593599077190.mp4_contient_des_NaN.txt" (ce qui réduit à l'analyse de 39 résultats)
 
+Il faut aussi faire attention à vos noms de fichier. Si vous décidez d'utiliser d'autre vidéos et résultats que ceux proposés, il faut que les noms de vos résultats commence par un M pour un mensonge ou par un V si c'est une vérité.
 
