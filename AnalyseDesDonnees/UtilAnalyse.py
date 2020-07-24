@@ -6,28 +6,27 @@
 # Description : Ce script contient différentes fonctions utile au script d'analyse
 #				des données.
 #
-#
+# Remarque nbMiniVideo est le nombre de "petites videos" que l'on veut prendre en compte
 #################################################################################################
 import numpy as np
 
 from matplotlib import pyplot as plt, gridspec
 from ExtractionDesDonnees.UtilExtract import ZONE_VISAGE, reductionBruit
 
-NB_MULTI_TAB = 10 # nombre de "petites videos" que l'on veut prendre en compte
 NB_IMAGES = 15 # nombre de d'images par "petites vidéos"
 NB_ZONE_VISAGE = 17
 
 
 # récupère les résultats d'un fichier texte et les renvoie sous forme d'un tableau numpy
-def recupResultats(path, videoName):
+def recupResultats(path, videoName, nbMiniVideo = 10):
 
     fichier = open(path + videoName, "r")
     strRes = fichier.read()
     debutMultiTab = 0
 
-    resultats = np.empty([NB_MULTI_TAB, NB_ZONE_VISAGE, NB_IMAGES])
+    resultats = np.empty([nbMiniVideo, NB_ZONE_VISAGE, NB_IMAGES])
 
-    for i in range(NB_MULTI_TAB):
+    for i in range(nbMiniVideo):
         debutMultiTab = strRes.find("[[", debutMultiTab + 1)
         debutTab = 0
         finTab = 0
@@ -45,16 +44,16 @@ def recupResultats(path, videoName):
     return resultats
 
 # renvoie un numpy array contenant le maximum de chaque petites vidéos pour chaque zone
-def recupMaxParZone(resultats):
+def recupMaxParZone(resultats , nbMiniVideo = 10):
 
-    maxParZone = np.empty([NB_ZONE_VISAGE, NB_MULTI_TAB])
-    for i in range(NB_MULTI_TAB):
+    maxParZone = np.empty([NB_ZONE_VISAGE, nbMiniVideo])
+    for i in range(nbMiniVideo):
         for j in range(NB_ZONE_VISAGE):
             maxParZone[j][i] = np.max(resultats[i][j])
     return maxParZone
 
 # créer un graphique "bar chart" avec comme titre le nom de la vidéo
-def creerBarGraph(donnee, videoName):
+def creerBarGraph(donnee, videoName, nbMiniVideo = 10):
 
     fig = plt.figure(figsize=(5, 20))
     grid = gridspec.GridSpec(ncols=1, nrows=NB_ZONE_VISAGE, hspace=0, figure=fig)
@@ -63,7 +62,7 @@ def creerBarGraph(donnee, videoName):
             fig.add_subplot(grid[i, 0]).set_title(videoName)
         else:
             fig.add_subplot(grid[i, 0])
-        plt.bar(range(1, NB_MULTI_TAB + 1), donnee[i], width=0.3)
+        plt.bar(range(1, nbMiniVideo + 1), donnee[i], width=0.3)
         plt.ylabel(ZONE_VISAGE.get(i + 1), fontsize=5.5)
         plt.ylim(0, 15)
 

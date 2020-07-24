@@ -39,7 +39,7 @@ if not lstVideos:
 NB_IMAGE_PAR_VIDEO = 15
 PATH_RESULTATS = "Resultats/"
 PATH_VIDEO_TRAITEE = "Videos/VideoTraitee/"
-erreurVisage = 0
+erreurNaN = 0
 
 os.makedirs(PATH_RESULTATS, exist_ok=True)
 os.makedirs(PATH_VIDEO_TRAITEE, exist_ok=True)
@@ -61,7 +61,7 @@ for video in lstVideos:
     # Paramètre pour la détéction de flux optique (méthode Lucas-Kanade)
     lk_param = dict( winSize  = (15,15), maxLevel = 2, criteria = (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10, 0.03))
 
-    imageTot = 0
+    nbImageTot = 0
     
     if os.path.exists(PATH_RESULTATS + video + ".txt"):
       os.remove(PATH_RESULTATS + video + ".txt")
@@ -72,7 +72,7 @@ for video in lstVideos:
         # Récupère la première image de chaque vidéo / ret est un booleen indiquant si l'image est exploitable
         ret, premiereImage = cap.read()
 
-        imageTot += 1
+        nbImageTot += 1
 
         if premiereImage is None:
             break
@@ -82,7 +82,6 @@ for video in lstVideos:
         # transforme la première image en nuance de gris
         premImageGrise = cv2.cvtColor(premiereImage, cv2.COLOR_BGR2GRAY)
 
-    
         # récupère un rectangle contenant le visage sur l'image (s'il n'y a pas de visage au format portrait, le script lance une erreur)
         rect = detecteur(premImageGrise, 1)
 
@@ -91,8 +90,10 @@ for video in lstVideos:
             shape = predicteur(premImageGrise, rect[0])
         except:
             logging.warning('Pas de visage détécté')
-            erreurVisage = 1
-            break
+            for i in range(NB_IMAGE_PAR_VIDEO):
+                ret, premiereImage = cap.read()
+            erreurNaN = 1
+            continue
 
         # définit les différents points que nous allons analysé
         points = creerTabPoint(shape_to_np(shape))
@@ -149,8 +150,12 @@ for video in lstVideos:
     
             evolSt &= st
 
+
             # applique un filtre qui va indiquer si un points et exploitable ou non en fonction de la distance qu'il a parcouru d'une image à la suivante
             st = filtre(evolSt, evolDist[nbImage - 1],20)
+            if np.sum(st) == 0:
+                logging.warning("Plus aucuns point correct, il y aura des NaN")
+                erreurNaN = 1
 
             # Calcul l'évolution de la direction des points
             if (nbImage == 1):
@@ -184,13 +189,14 @@ for video in lstVideos:
             p0 = p1
     
             nbImage += 1
-            imageTot += 1
+            nbImageTot += 1
+
 
         # supprime les fenêtres d'affichage
         cv2.destroyAllWindows()
 
         # Stockage de l'évolution de la distance moyenne parcourue par les points pour chaque zones du visage
-        fichier.write("\n\n" + str(int(imageTot/NB_IMAGE_PAR_VIDEO)))
+        fichier.write("\n\n" + str(int(nbImageTot/NB_IMAGE_PAR_VIDEO)))
         fichier.write("\n----------------------------------------------------------------------------------\n")
         fichier.write(np.array2string(reductionBruit(moyenne(evolDist, evolSt))))
     
@@ -198,9 +204,9 @@ for video in lstVideos:
     fichier.close()
     cap.release()
 
-    if erreurVisage == 1:
+    if erreurNaN == 1:
         os.rename(PATH_RESULTATS + video + ".txt" , PATH_RESULTATS + video + "_contient_des_NaN.txt")
-        erreurVisage = 0
+        erreurNaN = 0
 
     # déplacement des vidéos traitée dans un dossier "video traitée"
     if os.path.exists(PATH_VIDEO_TRAITEE + video):
