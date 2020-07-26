@@ -12,13 +12,13 @@ import numpy as np
 
 from matplotlib import pyplot as plt, gridspec
 from ExtractionDesDonnees.UtilExtract import ZONE_VISAGE, reductionBruit
-
+NB_MINI_VIDEO = 2
 NB_IMAGES = 15 # nombre de d'images par "petites vidéos"
 NB_ZONE_VISAGE = 17
 
 
 # récupère les résultats d'un fichier texte et les renvoie sous forme d'un tableau numpy
-def recupResultats(path, videoName, nbMiniVideo = 10):
+def recupResultats(path, videoName, nbMiniVideo = NB_MINI_VIDEO):
 
     fichier = open(path + videoName, "r")
     strRes = fichier.read()
@@ -44,7 +44,7 @@ def recupResultats(path, videoName, nbMiniVideo = 10):
     return resultats
 
 # renvoie un numpy array contenant le maximum de chaque petites vidéos pour chaque zone
-def recupMaxParZone(resultats , nbMiniVideo = 10):
+def recupMaxParZone(resultats , nbMiniVideo = NB_MINI_VIDEO):
 
     maxParZone = np.empty([NB_ZONE_VISAGE, nbMiniVideo])
     for i in range(nbMiniVideo):
@@ -53,7 +53,7 @@ def recupMaxParZone(resultats , nbMiniVideo = 10):
     return maxParZone
 
 # créer un graphique "bar chart" avec comme titre le nom de la vidéo
-def creerBarGraph(donnee, videoName, nbMiniVideo = 10):
+def creerBarGraph(donnee, videoName, nbMiniVideo = NB_MINI_VIDEO):
 
     fig = plt.figure(figsize=(5, 20))
     grid = gridspec.GridSpec(ncols=1, nrows=NB_ZONE_VISAGE, hspace=0, figure=fig)
