@@ -1,7 +1,7 @@
 #################################################################################################
 # Auteur : Guillaume Blanco
 #
-# Date de dernière modification : 23.07.2020
+# Date de dernière modification : 28.07.2020
 #
 # Description : Ce script récupère toutes les vidéos stocker dans un dossier vidéos puis les
 #               traite une par une. Il va découper chacunes des vidéos en plus petites vidéos
@@ -15,19 +15,23 @@
 #################################################################################################
 import os
 import cv2
+import sys
 import dlib
 import shutil
 import logging
 import numpy as np
 
-from ExtractionDesDonnees.UtilExtract import shape_to_np, creerTabPoint, filtre, direction, moyenne, reductionBruit, traitementImage
+from UtilExtract import shape_to_np, creerTabPoint, filtre, direction, moyenne, reductionBruit, traitementImage
 from scipy.spatial import distance
 
 
 PATH_VIDEOS = 'Videos/'
 
+if len(sys.argv) > 1:
+    PATH_VIDEOS = sys.argv[1]
+
 if not os.path.exists(PATH_VIDEOS):
-    logging.warning('Pas de dossier videos')
+    logging.warning('Pas de dossier ' + PATH_VIDEOS)
     exit()
 
 lstVideos = [f for f in os.listdir(PATH_VIDEOS) if os.path.isfile(os.path.join(PATH_VIDEOS, f))]
