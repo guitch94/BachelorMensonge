@@ -11,8 +11,8 @@
 import numpy as np
 
 from matplotlib import pyplot as plt, gridspec
-from ExtractionDesDonnees.UtilExtract import ZONE_VISAGE, reductionBruit
-NB_MINI_VIDEO = 2
+from ExtractionDesDonnees.UtilExtract import ZONE_VISAGE
+NB_MINI_VIDEO = 10
 NB_IMAGES = 15 # nombre de d'images par "petites vidéos"
 NB_ZONE_VISAGE = 17
 
