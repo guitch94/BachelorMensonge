@@ -305,10 +305,13 @@ def reductionBruit(tabMoyenne):
 
 
 # traite l'image pour qu'elle soit exploitable par le script
-def traitementImage(image):
+def traitementImage(image, sensVideo):
 	# retourne l'image si elle est en mode paysage
 	if (image.shape[0] < image.shape[1]):
-		image = cv2.rotate(image, cv2.ROTATE_90_COUNTERCLOCKWISE)
+		if sensVideo > 0:
+			image = cv2.rotate(image, cv2.ROTATE_90_COUNTERCLOCKWISE)
+		else:
+			image = cv2.rotate(image, cv2.ROTATE_90_CLOCKWISE)
 	# redimension la première image
 	image = imutils.resize(image, width=500)
 	return image

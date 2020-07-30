@@ -44,6 +44,7 @@ NB_IMAGE_PAR_VIDEO = 15
 PATH_RESULTATS = "Resultats/"
 PATH_VIDEO_TRAITEE = "Videos/VideoTraitee/"
 erreurNaN = 0
+sensVideo = 1
 
 os.makedirs(PATH_RESULTATS, exist_ok=True)
 os.makedirs(PATH_VIDEO_TRAITEE, exist_ok=True)
@@ -81,7 +82,7 @@ for video in lstVideos:
         if premiereImage is None:
             break
 
-        premiereImage = traitementImage(premiereImage)
+        premiereImage = traitementImage(premiereImage, sensVideo)
 
         # transforme la première image en nuance de gris
         premImageGrise = cv2.cvtColor(premiereImage, cv2.COLOR_BGR2GRAY)
@@ -94,9 +95,11 @@ for video in lstVideos:
             shape = predicteur(premImageGrise, rect[0])
         except:
             logging.warning('Pas de visage détécté')
+            sensVideo = -sensVideo
             for i in range(NB_IMAGE_PAR_VIDEO):
                 ret, premiereImage = cap.read()
-            erreurNaN = 1
+            if nbImageTot > NB_IMAGE_PAR_VIDEO:
+                erreurNaN = 1
             continue
 
         # définit les différents points que nous allons analysé
@@ -132,7 +135,7 @@ for video in lstVideos:
                 break
 
 
-            image = traitementImage(image)
+            image = traitementImage(image, sensVideo)
 
             imageGrise = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) # image en niveau de gris (0 à 255 par pixel)
     
@@ -159,7 +162,8 @@ for video in lstVideos:
             st = filtre(evolSt, evolDist[nbImage - 1],20)
             if np.sum(st) == 0:
                 logging.warning("Plus aucuns point correct, il y aura des NaN")
-                erreurNaN = 1
+                if nbImageTot > NB_IMAGE_PAR_VIDEO:
+                    erreurNaN = 1
 
             # Calcul l'évolution de la direction des points
             if (nbImage == 1):
@@ -175,7 +179,7 @@ for video in lstVideos:
     
             # Dessine les points sur le masque et les affiches sur l'image actuelle
     
-            '''for i,(actuels,anciens) in enumerate(zip(bonPoints,bonPointsAncients)):
+            for i,(actuels,anciens) in enumerate(zip(bonPoints,bonPointsAncients)):
                 a,b = actuels.ravel()
                 c,d = anciens.ravel()
                 masque = cv2.line(masque, (a,b),(c,d), (120,234,243), 2)
@@ -186,7 +190,7 @@ for video in lstVideos:
     
             k = cv2.waitKey(30) & 0xff
             if k == 27:
-                break'''
+                break
 
             # Mise à jour des l'image et des points précédents
             premImageGrise = imageGrise.copy()
