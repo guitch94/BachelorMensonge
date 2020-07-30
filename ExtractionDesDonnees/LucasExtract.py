@@ -43,7 +43,7 @@ if not lstVideos:
 NB_IMAGE_PAR_VIDEO = 15
 PATH_RESULTATS = "Resultats/"
 PATH_VIDEO_TRAITEE = "Videos/VideoTraitee/"
-erreurNaN = 0
+erreur = 0
 sensVideo = 1
 
 os.makedirs(PATH_RESULTATS, exist_ok=True)
@@ -94,12 +94,12 @@ for video in lstVideos:
             # détérmine les points de repère faciaux
             shape = predicteur(premImageGrise, rect[0])
         except:
-            logging.warning('Pas de visage détécté')
             sensVideo = -sensVideo
-            for i in range(NB_IMAGE_PAR_VIDEO):
-                ret, premiereImage = cap.read()
-            if nbImageTot > NB_IMAGE_PAR_VIDEO:
-                erreurNaN = 1
+            if nbImageTot > 1:
+                logging.warning('Pas de visage détécté')
+                erreur = 1
+                for i in range(NB_IMAGE_PAR_VIDEO):
+                    ret, premiereImage = cap.read()
             continue
 
         # définit les différents points que nous allons analysé
@@ -162,8 +162,7 @@ for video in lstVideos:
             st = filtre(evolSt, evolDist[nbImage - 1],20)
             if np.sum(st) == 0:
                 logging.warning("Plus aucuns point correct, il y aura des NaN")
-                if nbImageTot > NB_IMAGE_PAR_VIDEO:
-                    erreurNaN = 1
+                erreur = 1
 
             # Calcul l'évolution de la direction des points
             if (nbImage == 1):
@@ -212,9 +211,9 @@ for video in lstVideos:
     fichier.close()
     cap.release()
 
-    if erreurNaN == 1:
-        os.rename(PATH_RESULTATS + video + ".txt" , PATH_RESULTATS + video + "_contient_des_NaN.txt")
-        erreurNaN = 0
+    if erreur == 1:
+        os.rename(PATH_RESULTATS + video + ".txt" , PATH_RESULTATS + video + "_possible_erreur.txt")
+        erreur = 0
 
     # déplacement des vidéos traitée dans un dossier "video traitée"
     if os.path.exists(PATH_VIDEO_TRAITEE + video):
